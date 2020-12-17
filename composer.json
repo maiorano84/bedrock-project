@@ -12,6 +12,6 @@
     }
   ],
   "scripts": {
-    "post-root-package-install": "composer create-project roots/bedrock code"
+    "post-root-package-install": "composer create-project roots/bedrock code && php -r \"copy('.env.example', '.env');\""
   }
 }
