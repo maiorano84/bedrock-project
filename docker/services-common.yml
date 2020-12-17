@@ -1,0 +1,36 @@
+version: '3.8'
+
+x-db: &db-env
+  DB_NAME: ${MYSQL_DATABASE}
+  DB_USER: ${MYSQL_USER}
+  DB_PASSWORD: ${MYSQL_PASSWORD}
+  DB_HOST: mysql
+x-wp: &wp-env
+  WP_ENV: development
+  WP_HOME: http://${NGINX_SERVER_NAME}
+  WP_SITEURL: http://${NGINX_SERVER_NAME}/wp
+
+services:
+  nginx:
+    image: maiorano84/envinx
+    ports:
+      - "80"
+    environment:
+      NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
+      NGINX_ROOT: ${NGINX_ROOT}
+  mysql:
+    image: mariadb:10.1
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+  php:
+    image: maiorano84/php:${PHP_VERSION:-7.4}
+    ports:
+      - "9000"
+    environment:
+      <<: *db-env
+      <<: *wp-env

@@ -9,8 +9,10 @@ services:
       - ./code:/var/www/html
       - ./docker/nginx/logs:/var/log/nginx
       - ./docker/nginx/servers:/docker-entrypoint.d
-    ports:
-      - "${NGINX_PORT:-80}:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx.rule=Host(`${NGINX_SERVER_NAME}`)"
+      - "traefik.http.routers.nginx.entrypoints=web"
     depends_on:
       - php
   mysql:
@@ -30,3 +32,8 @@ services:
 
 volumes:
   mysql:
+
+networks:
+  default:
+    external:
+      name: traefik-network
