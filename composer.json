@@ -1,0 +1,17 @@
+{
+  "name": "maiorano84/bedrock-project",
+  "description": "Boilerplate for a new project based on roots/bedrock",
+  "keywords": ["wordpress", "bedrock", "docker"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Matt Maiorano",
+      "email": "maiorano84@gmail.com",
+      "homepage": "https://mattmaiorano.com",
+      "role": "Developer"
+    }
+  ],
+  "scripts": {
+    "post-root-package-install": "composer create-project roots/bedrock code"
+  }
+}
