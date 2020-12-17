@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  wordmove:
+    extends:
+      file: ./docker/services-common.yml
+      service: wordmove
+    volumes:
+      - ./code:/var/www/html
+      - ${SSH_PATH}:/home/wordmove/.ssh

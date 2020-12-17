@@ -1,6 +1,6 @@
 # Bedrock Project
 
-A project scaffold for getting up and running quickly with
+A local project scaffold for getting up and running quickly with
 a [Roots/Bedrock](https://roots.io/bedrock/) project over Docker Compose
 
 # Requirements

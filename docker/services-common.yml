@@ -34,3 +34,9 @@ services:
     environment:
       <<: *db-env
       <<: *wp-env
+  wordmove:
+    build:
+      context: ./wordmove
+    environment:
+      <<: *db-env
+      <<: *wp-env
