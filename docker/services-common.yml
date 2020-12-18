@@ -37,6 +37,8 @@ services:
   wordmove:
     build:
       context: ./wordmove
+      args:
+        PHP_VERSION: ${PHP_VERSION:-7.4}
     environment:
       <<: *db-env
       <<: *wp-env
