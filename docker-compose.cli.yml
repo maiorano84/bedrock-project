@@ -8,6 +8,13 @@ services:
     networks:
       - default
       - traefik
+  wp:
+    extends:
+      file: ./docker/services-common.yml
+      service: wp
+    networks:
+      - default
+      - traefik
   wordmove:
     extends:
       file: ./docker/services-common.yml

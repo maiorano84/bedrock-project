@@ -36,7 +36,10 @@ services:
     volumes:
       - mysql:/var/lib/mysql
   php:
-    image: maiorano84/php:${PHP_VERSION:-7.4}
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: ${PHP_VERSION:-7.4}
     ports:
       - "9000"
     environment:
@@ -56,3 +59,11 @@ services:
     volumes:
       - ../code:/var/www/html
       - ${SSH_PATH}:/wordmove/.ssh
+  wp:
+    image: wordpress:cli-php${PHP_VERSION:-7.4}
+    environment:
+      <<: *db-env
+      <<: *wp-env
+    volumes:
+      - ../code:/var/www/html
+    entrypoint: ["wp"]
