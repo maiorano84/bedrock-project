@@ -4,11 +4,13 @@ x-db: &db-env
   DB_NAME: ${MYSQL_DATABASE}
   DB_USER: ${MYSQL_USER}
   DB_PASSWORD: ${MYSQL_PASSWORD}
+  DB_PREFIX: ${MYSQL_PREFIX:-wp_}
   DB_HOST: mysql
 x-wp: &wp-env
   WP_ENV: development
   WP_HOME: http://${NGINX_SERVER_NAME}
   WP_SITEURL: http://${NGINX_SERVER_NAME}/wp
+  WP_DEBUG_LOG: ${WP_DEBUG_LOG:-/var/log/bedrock}
 
 services:
   nginx:
@@ -18,6 +20,10 @@ services:
     environment:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
       NGINX_ROOT: ${NGINX_ROOT}
+    volumes:
+      - ../code:/var/www/html
+      - ../logs/nginx:/var/log/nginx
+      - ./nginx:/docker-entrypoint.d
   mysql:
     image: mariadb:10.1
     ports:
@@ -27,6 +33,8 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql:/var/lib/mysql
   php:
     image: maiorano84/php:${PHP_VERSION:-7.4}
     ports:
@@ -34,6 +42,9 @@ services:
     environment:
       <<: *db-env
       <<: *wp-env
+    volumes:
+      - ../code:/var/www/html
+      - ../logs/bedrock:/var/log/bedrock
   wordmove:
     build:
       context: ./wordmove
@@ -42,3 +53,6 @@ services:
     environment:
       <<: *db-env
       <<: *wp-env
+    volumes:
+      - ../code:/var/www/html
+      - ${SSH_PATH}:/wordmove/.ssh

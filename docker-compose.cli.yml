@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  composer:
+    image: composer:latest
+    volumes:
+      - ./code:/app
+    networks:
+      - default
+      - traefik
+  wordmove:
+    extends:
+      file: ./docker/services-common.yml
+      service: wordmove
+    networks:
+      - default
+      - traefik
+
+networks:
+  traefik:
+    external:
+      name: traefik-network
