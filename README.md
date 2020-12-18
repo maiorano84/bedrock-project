@@ -49,12 +49,12 @@ automatically proxy requests to the running NGINX configuration.
 
 ```
 docker network create -d bridge traefik-network
-docker build -t traefik-web ./docker/traefik
 ```
 
 ## Container
 
 ```
+docker build -t traefik-web ./docker/traefik
 docker run -itd --restart unless-stopped \
     -p 80:80 -p 8080:8080 \
     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -62,3 +62,15 @@ docker run -itd --restart unless-stopped \
 ```
 
 Once running, you may also access the Traefik Dashboard by navigating to http://localhost:8080
+
+# CLI Tools
+
+Some command line tools are available as Compose services to make life a little easier:
+
+* `composer` - [Composer](https://getcomposer.org/)
+* `wp` - [WP CLI](https://wp-cli.org/)
+* `wordmove` - [Wordmove](https://github.com/welaika/wordmove)
+
+To run a CLI command as a service, simply run the following:
+
+`docker-compose -f docker-compose.cli.yml run --rm <service>...`
