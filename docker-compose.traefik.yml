@@ -15,10 +15,14 @@ services:
     extends:
       file: ./docker/services-common.yml
       service: mysql
+    labels:
+      - "traefik.enable=false"
   php:
     extends:
       file: ./docker/services-common.yml
       service: php
+    labels:
+      - "traefik.enable=false"
     depends_on:
       - mysql
 
