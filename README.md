@@ -36,14 +36,14 @@ subsequent Bedrock projects running the Traefik configuration will automatically
 that network.
 
 Once the network and the Traefik container are both up and running, you can run the project
-with the following: `docker-compose -f docker-compose.traefik.yml up -d`
+with the following: `docker-compose -f traefik.yml up -d`
 
 Once complete, your Bedrock site will be available at `http://${NGINX_SERVER_NAME}`
 
 # Setting up Traefik
 
-The provided Traefik configuration is set up to respond to `*.docker.localhost` and will
-automatically proxy requests to the running NGINX configuration.
+The provided commands will get you quickly set up with a simple base installation that should cover most of your needs.
+For additional options, see the [Static Configuration Documentation](https://doc.traefik.io/traefik/reference/static-configuration/cli/)
 
 ## Network
 
@@ -54,11 +54,16 @@ docker network create -d bridge traefik-network
 ## Container
 
 ```
-docker build -t traefik-web ./docker/traefik
-docker run -itd --restart unless-stopped \
-    -p 80:80 -p 8080:8080 \
+docker run -d -p 80:80 -p 443:443 -p 8080:8080 \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    --name=traefik --network=traefik-network traefik-web
+    --name=traefik \
+    --restart unless-stopped \
+    --network=traefik-network \
+    -l traefik.enable=false \
+    traefik:2.4 \
+    --api.insecure=true \
+    --entrypoints.web.address=:80 \
+    --entrypoints.websecure.address=:443
 ```
 
 Once running, you may also access the Traefik Dashboard by navigating to http://localhost:8080
@@ -73,4 +78,4 @@ Some command line tools are available as Compose services to make life a little 
 
 To run a CLI command as a service, simply run the following:
 
-`docker-compose -f docker-compose.cli.yml run --rm <service>...`
+`docker-compose -f cli.yml run --rm <service>...`
