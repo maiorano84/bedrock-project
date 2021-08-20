@@ -61,6 +61,7 @@ docker run -d -p 80:80 -p 443:443 -p 8080:8080 \
     --network=traefik-network \
     -l traefik.enable=false \
     traefik:2.4 \
+    --providers.docker=true \
     --api.insecure=true \
     --entrypoints.web.address=:80 \
     --entrypoints.websecure.address=:443
