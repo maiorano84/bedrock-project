@@ -66,8 +66,15 @@ Full URL Path of the website
 */}}
 {{- define "bedrock-project.homeurl" -}}
 {{- if .Values.ingress.tls -}}
-{{- print "https://" .Values.commonName -}}
+{{- print "https://" .Values.hostName -}}
 {{- else }}
-{{- print "http://" .Values.commonName -}}
+{{- print "http://" .Values.hostName -}}
 {{- end }}
+{{- end }}
+
+{{/*
+Container Image name
+*/}}
+{{- define "bedrock-project.imageName" -}}
+{{- print .repository ":" (.tag | default "latest") -}}
 {{- end }}

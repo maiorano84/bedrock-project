@@ -31,12 +31,51 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}-wordpress
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ include "bedrock-project.imageName" .Values.wordpress.image }}
+          imagePullPolicy: {{ .Values.wordpress.image.pullPolicy }}
           ports:
             - name: wordpress
               containerPort: 9000
               protocol: TCP
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: application
+            - mountPath: /var/www/html/web/app/uploads
+              name: uploads
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "bedrock-project.fullname" . }}-auth-secrets
+                  key: mariadb-password
+          envFrom:
+            - configMapRef:
+                name: {{ include "bedrock-project.fullname" . }}-wp-config
+        - name: {{ .Chart.Name }}-nginx
+          image: {{ include "bedrock-project.imageName" .Values.nginx.image }}
+          imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: application
+            - mountPath: /var/www/html/web/app/uploads
+              name: uploads
+            - mountPath: /etc/nginx/conf.d/default.conf
+              name: webserver-config
+              subPath: nginx.conf
+      initContainers:
+        - name: init-application
+          image: {{ include "bedrock-project.imageName" .Values.wordpress.image }}
+          imagePullPolicy: {{ .Values.wordpress.image.pullPolicy }}
+          command: [ "sh", "-c", "cp -r /var/www/html/* /entrypoint && chown www-data:www-data -R /entrypoint" ]
+          volumeMounts:
+            - name: application
+              mountPath: /entrypoint
+            - name: uploads
+              mountPath: /var/www/html/web/app/uploads
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -49,3 +88,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: application
+          emptyDir: {}
+        - name: uploads
+          {{- if .Values.uploads.persist }}
+          persistentVolumeClaim:
+            claimName: {{ include "bedrock-project.fullname" . }}-uploads
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        - name: webserver-config
+          configMap:
+            name: {{ include "bedrock-project.fullname" . }}-nginx
+

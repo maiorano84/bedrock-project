@@ -1,0 +1,24 @@
+{{- if .Values.uploads.persist }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "bedrock-project.fullname" . }}-uploads
+  labels: {{- include "bedrock-project.labels" . | nindent 4 }}
+  {{- with .Values.uploads.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- if not (empty .Values.uploads.accessModes) }}
+    {{- range .Values.uploads.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- else }}
+    - {{ .Values.uploads.accessMode | quote }}
+  {{- end }}
+  storageClassName: {{ .Values.uploads.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.uploads.size | default "5Gi" }}
+{{- end }}
