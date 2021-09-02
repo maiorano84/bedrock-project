@@ -1,0 +1,12 @@
+# Environment
+code/.env
+code/.env.*
+
+# Package Managers
+**/vendor
+**/node_modules
+
+# Wordpress
+code/web/wp
+code/web/app/cache
+code/web/app/uploads
