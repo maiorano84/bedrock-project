@@ -25,10 +25,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "bedrock-project.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}-wordpress
           image: {{ include "bedrock-project.imageName" .Values.wordpress.image }}
@@ -46,7 +42,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "bedrock-project.fullname" . }}-auth-secrets
+                  name: {{ include "bedrock-project.fullname" . }}-mariadb-secrets
                   key: mariadb-password
           envFrom:
             - configMapRef:

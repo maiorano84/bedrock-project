@@ -1,32 +1,21 @@
-# Default values for bedrock-project.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 nameOverride: ""
 fullnameOverride: ""
 replicaCount: 1
 
 environment: development
-hostName: &commonName bedrock-example.local
+hostName: &commonName localhost
 
 imagePullSecrets: []
 
 serviceAccount:
-  # Specifies whether a service account should be created
   create: false
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
   name: ""
 
 podAnnotations: {}
 
-# podSecurityContext: {}
-  # fsGroup: 2000
-
 service:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     http:
       port: 80
@@ -34,10 +23,10 @@ service:
       port: 9000
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
-  #  kubernetes.io/ingress.class: nginx
-  #  kubernetes.io/tls-acme: "true"
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
   #  - host: *commonName
   #    http:
@@ -54,18 +43,6 @@ ingress:
   #  - secretName: bedrock-example-tls
   #    hosts:
   #      - *commonName
-
-# resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 autoscaling:
   enabled: false
@@ -94,18 +71,18 @@ nginx:
 
 mariadb:
   enabled: true
-  host: external.host.domain.com
+  # host: external.host.domain.com
   # prefix: wp_
   auth:
     database: bedrock
     username: bedrock
-    password: secret
+    # password: secret
     existingSecret: example-bedrock-project-mariadb-secrets
 
 uploads:
-  persist: true
+  persist: false
   annotations: {}
-  #  helm.sh/resource-policy: keep
+    # helm.sh/resource-policy: keep
   storageClass: ""
   accessMode: ReadWriteOnce
   size: 5Gi

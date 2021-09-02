@@ -76,5 +76,5 @@ Full URL Path of the website
 Container Image name
 */}}
 {{- define "bedrock-project.imageName" -}}
-{{- print .repository ":" (.tag | default "latest") -}}
+{{- printf "%s:%s" .repository (.tag | default "latest") -}}
 {{- end }}

@@ -15,7 +15,7 @@ metadata:
 data:
   DB_NAME: {{ .Values.mariadb.auth.database }}
   DB_USER: {{ .Values.mariadb.auth.username }}
-  DB_HOST: {{ include "bedrock-project.fullname" $ }}-db
+  DB_HOST: {{ .Release.Name }}-mariadb
   DB_PREFIX: {{ .Values.mariadb.prefix | default "wp_" }}
   WP_ENV: {{ .Values.environment | default .Release.Name }}
   WP_HOME: {{ include "bedrock-project.homeurl" . }}

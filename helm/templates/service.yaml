@@ -20,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bedrock-project.fullname" $ }}-db
+  name: {{ .Release.Name }}-mariadb
   labels: {{- include "bedrock-project.labels" $ | nindent 4 }}
 spec:
   type: ExternalName
