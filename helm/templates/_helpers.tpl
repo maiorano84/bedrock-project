@@ -60,3 +60,14 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Full URL Path of the website
+*/}}
+{{- define "bedrock-wordpress.homeurl" -}}
+{{- if .Values.ingress.tls -}}
+{{- print "https://" .Values.commonName -}}
+{{- else }}
+{{- print "http://" .Values.commonName -}}
+{{- end }}
+{{- end }}

@@ -13,3 +13,14 @@ spec:
       name: http
   selector:
     {{- include "bedrock-wordpress.selectorLabels" . | nindent 4 }}
+---
+{{- if not .Values.mariadb.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "bedrock-wordpress.name" $ }}-db
+  labels: {{- include "bedrock-wordpress.labels" $ | nindent 4 }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.mariadb.host }}
+{{- end }}
