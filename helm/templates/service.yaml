@@ -1,25 +1,27 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bedrock-wordpress.fullname" . }}
+  name: {{ include "bedrock-project.fullname" . }}-frontend
   labels:
-    {{- include "bedrock-wordpress.labels" . | nindent 4 }}
+    {{- include "bedrock-project.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+    {{- range $name, $port := .Values.service.ports }}
+    - port: {{ $port.port }}
+      targetPort: {{ $port.targetPort | default $name }}
+      protocol: {{ $port.protocol | default "TCP" }}
+      name: {{ $name }}
+    {{- end }}
   selector:
-    {{- include "bedrock-wordpress.selectorLabels" . | nindent 4 }}
+    {{- include "bedrock-project.selectorLabels" . | nindent 4 }}
 ---
 {{- if not .Values.mariadb.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "bedrock-wordpress.name" $ }}-db
-  labels: {{- include "bedrock-wordpress.labels" $ | nindent 4 }}
+  name: {{ include "bedrock-project.fullname" $ }}-db
+  labels: {{- include "bedrock-project.labels" $ | nindent 4 }}
 spec:
   type: ExternalName
   externalName: {{ .Values.mariadb.host }}

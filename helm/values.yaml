@@ -1,11 +1,13 @@
-# Default values for bedrock-wordpress.
+# Default values for bedrock-project.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 nameOverride: ""
 fullnameOverride: ""
 replicaCount: 1
+
 commonName: &commonName bedrock-example.local
+environment: development
 
 image:
   repository: maiorano84/wordpress-bedrock
@@ -25,20 +27,16 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
+# podSecurityContext: {}
   # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
 
 service:
   type: ClusterIP
-  port: 80
+  ports:
+    http:
+      port: 80
+    wordpress:
+      port: 9000
 
 ingress:
   enabled: true
@@ -53,7 +51,7 @@ ingress:
   #          pathType: ImplementationSpecific
   #          backend:
   #            service:
-  #              name: example-bedrock-wordpress
+  #              name: example-bedrock-project-frontend
   #              port:
   #                name: http
 
@@ -62,7 +60,7 @@ ingress:
   #    hosts:
   #      - *commonName
 
-resources: {}
+# resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -89,6 +87,8 @@ affinity: {}
 
 mariadb:
   enabled: true
+  host: external.host.domain.com
+#  prefix: wp_
   auth:
     database: bedrock
     username: bedrock

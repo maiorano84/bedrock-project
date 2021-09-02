@@ -2,9 +2,9 @@
 apiVersion:  networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "bedrock-wordpress.fullname" . }}
+  name: {{ include "bedrock-project.fullname" . }}
   labels:
-    {{- include "bedrock-wordpress.labels" . | nindent 4 }}
+    {{- include "bedrock-project.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -28,7 +28,7 @@ spec:
   {{- else }}
   defaultBackend:
     service:
-      name: {{ include "bedrock-wordpress.fullname" . }}
+      name: {{ include "bedrock-project.fullname" . }}-frontend
       port:
         name: http
   {{- end }}

@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "bedrock-wordpress.fullname" . }}
+  name: {{ include "bedrock-project.fullname" . }}
   labels:
-    {{- include "bedrock-wordpress.labels" . | nindent 4 }}
+    {{- include "bedrock-project.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "bedrock-wordpress.fullname" . }}
+    name: {{ include "bedrock-project.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
