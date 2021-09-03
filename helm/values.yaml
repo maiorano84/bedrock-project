@@ -19,6 +19,7 @@ service:
   ports:
     http:
       port: 80
+      targetPort: nginx
     wordpress:
       port: 9000
 
@@ -58,12 +59,14 @@ tolerations: []
 affinity: {}
 
 wordpress:
+  port: 9000
   image:
     repository: maiorano84/wordpress-bedrock
     pullPolicy: IfNotPresent
     tag: "latest"
 
 nginx:
+  port: 8080
   image:
     repository: nginx
     pullPolicy: IfNotPresent
@@ -77,7 +80,7 @@ mariadb:
     database: bedrock
     username: bedrock
     # password: secret
-    existingSecret: example-bedrock-project-mariadb-secrets
+    existingSecret: example-mariadb-secrets
 
 uploads:
   persist: false

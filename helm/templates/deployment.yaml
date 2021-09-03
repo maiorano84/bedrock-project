@@ -5,18 +5,18 @@ metadata:
   labels:
     {{- include "bedrock-project.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-{{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "bedrock-project.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-    {{- with .Values.podAnnotations }}
+      {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       labels:
         {{- include "bedrock-project.selectorLabels" . | nindent 8 }}
     spec:
@@ -31,7 +31,7 @@ spec:
           imagePullPolicy: {{ .Values.wordpress.image.pullPolicy }}
           ports:
             - name: wordpress
-              containerPort: 9000
+              containerPort: {{ .Values.wordpress.port }}
               protocol: TCP
           volumeMounts:
             - mountPath: /var/www/html
@@ -42,7 +42,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "bedrock-project.fullname" . }}-mariadb-secrets
+                  name: {{ .Release.Name }}-mariadb-secrets
                   key: mariadb-password
           envFrom:
             - configMapRef:
@@ -51,8 +51,8 @@ spec:
           image: {{ include "bedrock-project.imageName" .Values.nginx.image }}
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: nginx
+              containerPort: {{ .Values.nginx.port }}
               protocol: TCP
           volumeMounts:
             - mountPath: /var/www/html
