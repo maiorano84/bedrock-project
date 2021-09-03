@@ -1,0 +1,10 @@
+# Override any of the defaults as you see fit here
+# This configuration will remove the non-standard port number from the host
+hostName: localhost
+service:
+  type: LoadBalancer
+  ports:
+    wordpress:
+      port: 9000
+    nginx:
+      port: 80

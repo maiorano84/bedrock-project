@@ -4,4 +4,5 @@ helm/charts/*.tgz
 helm/environments/*
 
 !logs/**/.gitkeep
-!helm/environments/.gitkeep
+!helm/environments/*.gitkeep
+!helm/environments/*.dist.yaml

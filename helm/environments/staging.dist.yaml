@@ -1,0 +1,20 @@
+# An example of a Staging environment with:
+# 1. Caching enabled
+# 2. An external database
+# 3. Persistent user uploads
+environment: staging
+hostName: staging.example.com
+
+varnish:
+  enabled: true
+
+mariadb:
+  enabled: true
+  host: external.database.staging.example.com
+  auth:
+    database: bedrock_staging
+    username: bedrock_staging
+    # password: <secret>
+
+uploadsPVC:
+  enabled: true

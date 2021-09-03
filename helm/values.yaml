@@ -2,11 +2,17 @@
 nameOverride: ""
 fullnameOverride: ""
 environment: development
-hostName: &commonName localhost
+hostName: localhost:8080
 
 # Varnish Options
 varnish:
-  enabled: true
+  enabled: false
+  backend: {}
+    # host: example-http
+    # port: 8080
+  purgeWhitelist:
+    - "127.0.0.1"
+    - "localhost"
 
 # Wordpress Options
 wordpress:
@@ -29,8 +35,8 @@ nginx:
 ###       to an external database using the provided credentials. The password field must
 ###       still be set, as this information is still kept in a separate secret.
 mariadb:
-  enabled: false
-  host: external.host.domain.com
+  enabled: true
+  # host: external.host.domain.com
   # prefix: wp_
   auth:
     database: bedrock
@@ -40,16 +46,16 @@ mariadb:
 
 # Uploads Folder Persistence Volume Claim Options
 uploadsPVC:
-  enabled: true
+  enabled: false
   annotations: {}
-  # helm.sh/resource-policy: keep
+    # helm.sh/resource-policy: keep
   storageClass: ""
   accessMode: ReadWriteOnce
   size: 5Gi
 
 #Service Options
 service:
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     wordpress:
       port: 9000
@@ -73,7 +79,7 @@ replicaCount: 1
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 

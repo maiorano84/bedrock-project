@@ -6,12 +6,13 @@ backend: {}
 #  host:
 #  port:
 
-purgeWhitelist:
-  - "127.0.0.1"
-  - "localhost"
+purgeWhitelist: []
+#  - "127.0.0.1"
+#  - "localhost"
 
 # Service Options
 service:
+  enabled: true
   type: LoadBalancer
   port: 80
 
