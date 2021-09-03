@@ -1,0 +1,54 @@
+# An example of a Production environment with:
+# 1. Replicated Caching enabled
+# 2. An external database
+# 3. Persistent user uploads
+# 4. NGINX Ingress with TLS
+# 5. Autoscaling enabled on the backing Wordpress deployments
+environment: production
+hostName: &commonName example.com
+
+varnish:
+  enabled: true
+  replicaCount: 2
+  service:
+    type: ClusterIP
+
+mariadb:
+  enabled: false
+  host: external.database.example.com
+  auth:
+    database: bedrock_production
+    username: bedrock_production
+    # password: <secret>
+
+uploadsPVC:
+  enabled: true
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  hosts:
+    - host: *commonName
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: example-varnish
+                port:
+                  name: cache
+  tls:
+    - secretName: bedrock-example-tls
+      hosts:
+        - *commonName
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8

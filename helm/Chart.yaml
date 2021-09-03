@@ -1,0 +1,14 @@
+apiVersion: v2
+name: bedrock-project
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.0
+appVersion: 5.8.0
+dependencies:
+  - name: mariadb
+    version: 9.4.4
+    repository: https://charts.bitnami.com/bitnami
+    condition: mariadb.enabled
+  - name: varnish
+    version: 0.1.0
+    condition: varnish.enabled

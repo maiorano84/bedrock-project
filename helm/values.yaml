@@ -1,0 +1,101 @@
+# Global Options
+nameOverride: ""
+fullnameOverride: ""
+environment: development
+hostName: localhost:8080
+
+# Varnish Options
+varnish:
+  enabled: false
+  backend: {}
+    # host: example-http
+    # port: 8080
+  purgeWhitelist:
+    - "127.0.0.1"
+    - "localhost"
+
+# Wordpress Options
+wordpress:
+  port: 9000
+  image:
+    repository: maiorano84/wordpress-bedrock
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+# NGINX Options
+nginx:
+  port: 8080
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: "1.21.1-alpine"
+
+# MariaDB Options
+### NOTE: Leaving mariadb.enabled set to false means that Wordpress will attempt to connect
+###       to an external database using the provided credentials. The password field must
+###       still be set, as this information is still kept in a separate secret.
+mariadb:
+  enabled: true
+  # host: external.host.domain.com
+  # prefix: wp_
+  auth:
+    database: bedrock
+    username: bedrock
+    # password: <secret>
+    existingSecret: example-mariadb-secrets
+
+# Uploads Folder Persistence Volume Claim Options
+uploadsPVC:
+  enabled: false
+  annotations: {}
+    # helm.sh/resource-policy: keep
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+#Service Options
+service:
+  type: LoadBalancer
+  ports:
+    wordpress:
+      port: 9000
+    nginx:
+      port: 8080
+
+# Ingress Options
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts: []
+  tls: []
+  #  - secretName: bedrock-example-tls
+  #    hosts:
+  #      - *commonName
+
+# Autoscaling Options
+replicaCount: 1
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+#Deployment Options
+podAnnotations: {}
+
+imagePullSecrets: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Service Account Options
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bedrock-project.fullname" . }}-nginx
+  labels: {{- include "bedrock-project.labels" . | nindent 4 }}
+data:
+  nginx.conf: |-
+    {{- tpl (.Files.Get "config/nginx.conf") . | nindent 4 }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "bedrock-project.fullname" . }}-wp-config
+  labels: {{- include "bedrock-project.labels" . | nindent 4 }}
+data:
+  DB_NAME: {{ .Values.mariadb.auth.database }}
+  DB_USER: {{ .Values.mariadb.auth.username }}
+  DB_HOST: {{ .Release.Name }}-mariadb
+  DB_PREFIX: {{ .Values.mariadb.prefix | default "wp_" }}
+  WP_ENV: {{ .Values.environment | default .Release.Name }}
+  WP_HOME: {{ include "bedrock-project.homeurl" . }}
+  WP_SITEURL: {{ include "bedrock-project.homeurl" . }}/wp

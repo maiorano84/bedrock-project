@@ -1,0 +1,24 @@
+{{- if .Values.uploadsPVC.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "bedrock-project.fullname" . }}-uploads
+  labels: {{- include "bedrock-project.labels" . | nindent 4 }}
+  {{- with .Values.uploadsPVC.annotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- if not (empty .Values.uploadsPVC.accessModes) }}
+    {{- range .Values.uploadsPVC.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- else }}
+    - {{ .Values.uploadsPVC.accessMode | quote }}
+  {{- end }}
+  storageClassName: {{ .Values.uploadsPVC.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.uploadsPVC.size | default "5Gi" }}
+{{- end }}

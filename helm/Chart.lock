@@ -1,0 +1,9 @@
+dependencies:
+- name: mariadb
+  repository: https://charts.bitnami.com/bitnami
+  version: 9.4.4
+- name: varnish
+  repository: ""
+  version: 0.1.0
+digest: sha256:46c339338d2f48c1330ee62be2b2fedb3bf092469a0b6d3ab9b0b148038e0ea3
+generated: "2021-09-02T23:41:28.015773-04:00"
