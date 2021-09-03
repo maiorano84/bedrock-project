@@ -9,7 +9,7 @@ varnish:
   enabled: true
 
 mariadb:
-  enabled: true
+  enabled: false
   host: external.database.staging.example.com
   auth:
     database: bedrock_staging
@@ -18,3 +18,6 @@ mariadb:
 
 uploadsPVC:
   enabled: true
+
+service:
+  type: ClusterIP
