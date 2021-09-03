@@ -1,63 +1,14 @@
+# Global Options
 nameOverride: ""
 fullnameOverride: ""
-replicaCount: 1
-
 environment: development
 hostName: &commonName localhost
 
-imagePullSecrets: []
+# Varnish Options
+varnish:
+  enabled: true
 
-serviceAccount:
-  create: false
-  annotations: {}
-  name: ""
-
-podAnnotations: {}
-
-service:
-  type: LoadBalancer
-  ports:
-    http:
-      port: 80
-      targetPort: nginx
-    wordpress:
-      port: 9000
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-  #  - host: *commonName
-  #    http:
-  #      paths:
-  #        - path: /
-  #          pathType: ImplementationSpecific
-  #          backend:
-  #            service:
-  #              name: example-bedrock-project-frontend
-  #              port:
-  #                name: http
-
-  tls: []
-  #  - secretName: bedrock-example-tls
-  #    hosts:
-  #      - *commonName
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
+# Wordpress Options
 wordpress:
   port: 9000
   image:
@@ -65,6 +16,7 @@ wordpress:
     pullPolicy: IfNotPresent
     tag: "latest"
 
+# NGINX Options
 nginx:
   port: 8080
   image:
@@ -72,20 +24,72 @@ nginx:
     pullPolicy: IfNotPresent
     tag: "1.21.1-alpine"
 
+# MariaDB Options
+### NOTE: Leaving mariadb.enabled set to false means that Wordpress will attempt to connect
+###       to an external database using the provided credentials. The password field must
+###       still be set, as this information is still kept in a separate secret.
 mariadb:
-  enabled: true
-  # host: external.host.domain.com
+  enabled: false
+  host: external.host.domain.com
   # prefix: wp_
   auth:
     database: bedrock
     username: bedrock
-    # password: secret
+    # password: <secret>
     existingSecret: example-mariadb-secrets
 
-uploads:
-  persist: false
+# Uploads Folder Persistence Volume Claim Options
+uploadsPVC:
+  enabled: true
   annotations: {}
-    # helm.sh/resource-policy: keep
+  # helm.sh/resource-policy: keep
   storageClass: ""
   accessMode: ReadWriteOnce
   size: 5Gi
+
+#Service Options
+service:
+  type: LoadBalancer
+  ports:
+    wordpress:
+      port: 9000
+    nginx:
+      port: 8080
+
+# Ingress Options
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts: {}
+  tls: []
+  #  - secretName: bedrock-example-tls
+  #    hosts:
+  #      - *commonName
+
+# Autoscaling Options
+replicaCount: 1
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+#Deployment Options
+podAnnotations: {}
+
+imagePullSecrets: []
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Service Account Options
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""

@@ -9,3 +9,6 @@ dependencies:
     version: 9.4.4
     repository: https://charts.bitnami.com/bitnami
     condition: mariadb.enabled
+  - name: varnish
+    version: 0.1.0
+    condition: varnish.enabled

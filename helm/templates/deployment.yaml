@@ -88,7 +88,7 @@ spec:
         - name: application
           emptyDir: {}
         - name: uploads
-          {{- if .Values.uploads.persist }}
+          {{- if .Values.uploadsPVC.enabled }}
           persistentVolumeClaim:
             claimName: {{ include "bedrock-project.fullname" . }}-uploads
           {{- else }}

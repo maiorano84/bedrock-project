@@ -1,6 +1,6 @@
 .env
 logs/*
-helm/charts/*
+helm/charts/*.tgz
 helm/environments/*
 
 !logs/**/.gitkeep
