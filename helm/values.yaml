@@ -49,7 +49,7 @@ uploadsPVC:
 
 #Service Options
 service:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     wordpress:
       port: 9000
